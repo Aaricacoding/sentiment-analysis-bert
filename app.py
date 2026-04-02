@@ -1,65 +1,55 @@
 # ============================================================
-#  Sentiment Analysis App — BERT + Gradio
+#  Sentiment Analysis App — Multi-Emotion Detection
 #  Author  : Aarica Raj
 #  GitHub  : github.com/Aaricacoding
-#  Project : NLP with Transformers (BERT Fine-tuning)
+#  Project : NLP with Transformers (7 Emotions!)
 # ============================================================
 
 import gradio as gr
 from transformers import pipeline
-import time
 
-# ── 1. Load Pre-trained Sentiment Model ────────────────────
-print("Loading BERT Sentiment Analysis model...")
+# ── 1. Load Multi-Emotion Model ────────────────────────────
+print("Loading Emotion Detection model...")
 
 sentiment_pipeline = pipeline(
-    task   = "sentiment-analysis",
-    model  = "distilbert-base-uncased-finetuned-sst-2-english",
-    top_k  = None  # returns scores for ALL labels
+    task  = "text-classification",
+    model = "j-hartmann/emotion-english-distilroberta-base",
+    top_k = None
 )
 
 print("Model loaded successfully!")
 
+# Emoji map for each emotion
+EMOJI_MAP = {
+    "joy"      : "😊 JOY",
+    "sadness"  : "😢 SADNESS",
+    "anger"    : "😠 ANGER",
+    "fear"     : "😨 FEAR",
+    "surprise" : "😲 SURPRISE",
+    "disgust"  : "🤢 DISGUST",
+    "neutral"  : "😐 NEUTRAL",
+}
 
-# ── 2. Sentiment Analysis Function ─────────────────────────
+
+# ── 2. Emotion Detection Function ──────────────────────────
 def analyze_sentiment(text):
-    """
-    Analyze the sentiment of input text using BERT.
-
-    Args:
-        text: Input text from user
-
-    Returns:
-        tuple: (label, confidence, all_scores, emoji)
-    """
     if not text or text.strip() == "":
-        return "⚠️ Please enter some text!", "", {}, ""
+        return "Please enter some text!", "", {}
 
-    # Run through BERT pipeline
-    results = sentiment_pipeline(text[:512])[0]  # limit to 512 tokens
-
-    # Extract scores
-    scores = {item['label']: round(item['score'] * 100, 2) for item in results}
-
-    # Get top result
-    top     = max(results, key=lambda x: x['score'])
-    label   = top['label']
+    results    = sentiment_pipeline(text[:512])[0]
+    scores     = {item['label'].capitalize(): round(item['score'] * 100, 2) for item in results}
+    top        = max(results, key=lambda x: x['score'])
+    label      = top['label'].lower()
     confidence = round(top['score'] * 100, 2)
-
-    # Emoji based on sentiment
-    if label == "POSITIVE":
-        emoji   = "😊 POSITIVE"
-        message = f"The text has a **positive** sentiment with **{confidence}%** confidence!"
-    else:
-        emoji   = "😞 NEGATIVE"
-        message = f"The text has a **negative** sentiment with **{confidence}%** confidence!"
+    emoji      = EMOJI_MAP.get(label, f"🔍 {label.upper()}")
+    message    = f"The text expresses **{label.upper()}** with **{confidence}%** confidence!"
 
     return emoji, message, scores
 
 
 # ── 3. Gradio UI ────────────────────────────────────────────
 with gr.Blocks(
-    title="Sentiment Analysis - BERT",
+    title="Emotion Detection - Multi Sentiment",
     theme=gr.themes.Soft(),
     css="""
         .header { text-align: center; padding: 20px 0 10px; }
@@ -68,52 +58,49 @@ with gr.Blocks(
     """
 ) as demo:
 
-    # Header
     gr.HTML("""
         <div class='header'>
-            <h1>🧠 Sentiment Analysis using BERT</h1>
-            <p>Type any text and let the AI detect if it's Positive or Negative!</p>
-            <p><i>Model: DistilBERT fine-tuned on SST-2 &nbsp;|&nbsp;
-               Architecture: BERT Transformer</i></p>
+            <h1>🧠 Emotion Detection using BERT</h1>
+            <p>Type any text and let AI detect the emotion — Joy, Sadness, Anger, Fear, Surprise, Disgust or Neutral!</p>
+            <p><i>Model: DistilRoBERTa &nbsp;|&nbsp; 7 Emotions &nbsp;|&nbsp; HuggingFace Transformers</i></p>
         </div>
     """)
 
     with gr.Row():
-        # Left — Input
         with gr.Column(scale=1):
             text_input = gr.Textbox(
                 label       = "Enter Text",
                 placeholder = "Type a sentence, review, or any text here...",
                 lines       = 5
             )
-            analyze_btn = gr.Button("🔍 Analyze Sentiment", variant="primary", size="lg")
+            analyze_btn = gr.Button("🔍 Detect Emotion", variant="primary", size="lg")
 
             gr.Examples(
                 examples = [
-                    ["I absolutely love this product! It works perfectly and exceeded my expectations."],
-                    ["This is the worst experience I have ever had. Completely disappointed."],
+                    ["I absolutely love this! It made my day so much better!"],
+                    ["This is the worst experience I have ever had. I am so angry!"],
                     ["The movie was okay, nothing special but not terrible either."],
-                    ["I am so happy today! Everything is going great in my life."],
-                    ["I hate waiting in long queues. It wastes so much of my time."],
+                    ["I am so scared, I don't know what will happen next."],
+                    ["Oh wow! I never expected that to happen, what a surprise!"],
+                    ["This food smells disgusting, I cannot eat it."],
+                    ["I went to the store and bought some groceries today."],
                 ],
                 inputs = [text_input],
                 label  = "Try these examples"
             )
 
-        # Right — Output
         with gr.Column(scale=1):
             sentiment_label = gr.Textbox(
-                label       = "Sentiment Result",
+                label       = "Detected Emotion",
                 elem_classes= ["result"],
                 interactive = False
             )
             message_output = gr.Markdown(label="Analysis")
             score_output   = gr.Label(
-                label      = "Confidence Scores (%)",
-                num_top_classes = 2
+                label           = "All Emotion Scores (%)",
+                num_top_classes = 7
             )
 
-    # Footer
     gr.HTML("""
         <div class='footer'>
             Built by <b>Aarica Raj</b> &nbsp;|&nbsp;
@@ -122,14 +109,12 @@ with gr.Blocks(
         </div>
     """)
 
-    # Wire button
     analyze_btn.click(
         fn      = analyze_sentiment,
         inputs  = [text_input],
         outputs = [sentiment_label, message_output, score_output]
     )
 
-    # Also trigger on Enter key
     text_input.submit(
         fn      = analyze_sentiment,
         inputs  = [text_input],
