@@ -9,9 +9,9 @@
 ## 📌 What is this project?
 
 This project builds an **AI-powered Sentiment Analysis System** that detects whether
-any text is **Positive** or **Negative** — along with a confidence score.
+any text is **Positive** or **Negative** along with a confidence score.
 
-It uses **DistilBERT** — a lighter, faster version of **BERT (Bidirectional Encoder
+It uses **DistilBERT** a lighter, faster version of **BERT (Bidirectional Encoder
 Representations from Transformers)** fine-tuned on the **SST-2 dataset** (Stanford
 Sentiment Treebank) containing 67,000+ movie reviews.
 
@@ -56,7 +56,7 @@ Input Text
 | **BERT** | Reads text in both directions (left→right AND right→left) |
 | **DistilBERT** | 40% smaller, 60% faster than BERT, keeps 97% accuracy |
 | **Fine-tuning** | Pre-trained model trained further on sentiment data |
-| **SST-2** | Stanford Sentiment Treebank — 67K labeled movie reviews |
+| **SST-2** | Stanford Sentiment Treebank - 67K labeled movie reviews |
 | **[CLS] Token** | Special token BERT uses for classification tasks |
 | **Softmax** | Converts raw scores to probabilities (sum = 100%) |
 
