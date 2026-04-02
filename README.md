@@ -81,13 +81,13 @@ sentiment-analysis-bert/
 
 ## ⚙️ Setup & Installation
 
-### Step 1 — Clone the Repository
+### Step 1 : Clone the Repository
 ```bash
 git clone https://github.com/Aaricacoding/sentiment-analysis-bert.git
 cd sentiment-analysis-bert
 ```
 
-### Step 2 — Create Virtual Environment
+### Step 2 : Create Virtual Environment
 ```bash
 python -m venv venv
 
@@ -98,17 +98,17 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### Step 3 — Install Dependencies
+### Step 3 : Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 4 — Run the App
+### Step 4 : Run the App
 ```bash
 python app.py
 ```
 
-### Step 5 — Open in Browser
+### Step 5 : Open in Browser
 ```
 http://localhost:7861
 ```
