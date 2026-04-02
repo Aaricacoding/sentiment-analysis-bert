@@ -9,12 +9,12 @@
 ## 📌 What is this project?
 
 This project builds an **AI-powered Full Emotion & Sentiment Analysis System** that detects:
-- **7 Emotions** — Joy, Sadness, Anger, Fear, Surprise, Disgust, Neutral
-- **Overall Sentiment** — Positive or Negative
+- **7 Emotions** : Joy, Sadness, Anger, Fear, Surprise, Disgust, Neutral
+- **Overall Sentiment** : Positive or Negative
 
 It uses **two models together:**
-- **DistilRoBERTa** — fine-tuned on emotion dataset for 7-emotion detection
-- **DistilBERT** — fine-tuned on SST-2 for Positive/Negative sentiment
+- **DistilRoBERTa** : fine-tuned on emotion dataset for 7-emotion detection
+- **DistilBERT** : fine-tuned on SST-2 for Positive/Negative sentiment
 
 Real-world use cases:
 - 📦 Product review analysis
@@ -59,10 +59,10 @@ Input Text
 |---|---|
 | **BERT** | Reads text in both directions for better understanding |
 | **DistilBERT** | 40% smaller, 60% faster than BERT, keeps 97% accuracy |
-| **RoBERTa** | Improved BERT with better training — more accurate |
+| **RoBERTa** | Improved BERT with better training - more accurate |
 | **DistilRoBERTa** | Lighter version of RoBERTa for faster inference |
 | **Fine-tuning** | Pre-trained model trained further on specific data |
-| **SST-2** | Stanford Sentiment Treebank — 67K labeled movie reviews |
+| **SST-2** | Stanford Sentiment Treebank - 67K labeled movie reviews |
 | **Softmax** | Converts raw scores to probabilities that sum to 100% |
 
 ---
@@ -189,13 +189,13 @@ http://localhost:7861
 
 ## 📄 License
 
-MIT License — free to use, modify, and share!
+MIT License : free to use, modify, and share!
 
 ---
 
 ## 🙏 Acknowledgements
 
-- [HuggingFace](https://huggingface.co) — for Transformers library and model hub
-- [j-hartmann](https://huggingface.co/j-hartmann) — for the emotion detection model
-- [Stanford NLP](https://nlp.stanford.edu/sentiment/) — for SST-2 dataset
-- [Gradio Team](https://gradio.app) — for the UI framework
+- [HuggingFace](https://huggingface.co) : for Transformers library and model hub
+- [j-hartmann](https://huggingface.co/j-hartmann) : for the emotion detection model
+- [Stanford NLP](https://nlp.stanford.edu/sentiment/) : for SST-2 dataset
+- [Gradio Team](https://gradio.app) : for the UI framework
