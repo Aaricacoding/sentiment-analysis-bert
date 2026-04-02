@@ -1,104 +1,137 @@
 # ============================================================
-#  Sentiment Analysis App — Multi-Emotion Detection
+#  Sentiment Analysis App — Full Emotion Breakdown
 #  Author  : Aarica Raj
 #  GitHub  : github.com/Aaricacoding
-#  Project : NLP with Transformers (7 Emotions!)
+#  Project : NLP with Transformers (7 Emotions + Positive/Negative)
 # ============================================================
 
 import gradio as gr
 from transformers import pipeline
 
-# ── 1. Load Multi-Emotion Model ────────────────────────────
-print("Loading Emotion Detection model...")
+# ── 1. Load Both Models ─────────────────────────────────────
+print("Loading models...")
 
-sentiment_pipeline = pipeline(
+emotion_pipeline   = pipeline(
     task  = "text-classification",
     model = "j-hartmann/emotion-english-distilroberta-base",
     top_k = None
 )
 
-print("Model loaded successfully!")
+sentiment_pipeline = pipeline(
+    task  = "sentiment-analysis",
+    model = "distilbert-base-uncased-finetuned-sst-2-english",
+    top_k = None
+)
 
-# Emoji map for each emotion
+print("All models loaded successfully!")
+
 EMOJI_MAP = {
-    "joy"      : "😊 JOY",
-    "sadness"  : "😢 SADNESS",
-    "anger"    : "😠 ANGER",
-    "fear"     : "😨 FEAR",
-    "surprise" : "😲 SURPRISE",
-    "disgust"  : "🤢 DISGUST",
-    "neutral"  : "😐 NEUTRAL",
+    "joy"      : "😊 Joy",
+    "sadness"  : "😢 Sadness",
+    "anger"    : "😠 Anger",
+    "fear"     : "😨 Fear",
+    "surprise" : "😲 Surprise",
+    "disgust"  : "🤢 Disgust",
+    "neutral"  : "😐 Neutral",
+    "POSITIVE" : "👍 Positive",
+    "NEGATIVE" : "👎 Negative",
 }
 
 
-# ── 2. Emotion Detection Function ──────────────────────────
-def analyze_sentiment(text):
+# ── 2. Analysis Function ────────────────────────────────────
+def analyze(text):
     if not text or text.strip() == "":
-        return "Please enter some text!", "", {}
+        return "Please enter some text!", "", {}, {}
 
-    results    = sentiment_pipeline(text[:512])[0]
-    scores     = {item['label'].capitalize(): round(item['score'] * 100, 2) for item in results}
-    top        = max(results, key=lambda x: x['score'])
-    label      = top['label'].lower()
-    confidence = round(top['score'] * 100, 2)
-    emoji      = EMOJI_MAP.get(label, f"🔍 {label.upper()}")
-    message    = f"The text expresses **{label.upper()}** with **{confidence}%** confidence!"
+    # Emotion scores
+    emotion_results  = emotion_pipeline(text[:512])[0]
+    emotion_scores   = {
+        EMOJI_MAP.get(e['label'], e['label']): round(e['score'] * 100, 2)
+        for e in emotion_results
+    }
 
-    return emoji, message, scores
+    # Positive/Negative scores
+    sentiment_results = sentiment_pipeline(text[:512])[0]
+    sentiment_scores  = {
+        EMOJI_MAP.get(s['label'], s['label']): round(s['score'] * 100, 2)
+        for s in sentiment_results
+    }
+
+    # Top emotion
+    top_emotion    = max(emotion_results, key=lambda x: x['score'])
+    top_sentiment  = max(sentiment_results, key=lambda x: x['score'])
+    emotion_label  = EMOJI_MAP.get(top_emotion['label'], top_emotion['label'])
+    sentiment_label= EMOJI_MAP.get(top_sentiment['label'], top_sentiment['label'])
+    emotion_conf   = round(top_emotion['score'] * 100, 2)
+    sentiment_conf = round(top_sentiment['score'] * 100, 2)
+
+    summary = f"""
+### 🎯 Result Summary
+- **Primary Emotion:** {emotion_label} ({emotion_conf}%)
+- **Overall Sentiment:** {sentiment_label} ({sentiment_conf}%)
+"""
+
+    return emotion_label, summary, emotion_scores, sentiment_scores
 
 
 # ── 3. Gradio UI ────────────────────────────────────────────
 with gr.Blocks(
-    title="Emotion Detection - Multi Sentiment",
+    title="Full Emotion + Sentiment Analysis",
     theme=gr.themes.Soft(),
     css="""
         .header { text-align: center; padding: 20px 0 10px; }
         .footer { text-align: center; font-size: 12px; color: #888; margin-top: 10px; }
-        .result { font-size: 20px; font-weight: bold; text-align: center; }
+        .result { font-size: 22px; font-weight: bold; text-align: center; }
     """
 ) as demo:
 
     gr.HTML("""
         <div class='header'>
-            <h1>🧠 Emotion Detection using BERT</h1>
-            <p>Type any text and let AI detect the emotion — Joy, Sadness, Anger, Fear, Surprise, Disgust or Neutral!</p>
-            <p><i>Model: DistilRoBERTa &nbsp;|&nbsp; 7 Emotions &nbsp;|&nbsp; HuggingFace Transformers</i></p>
+            <h1>🧠 Full Emotion & Sentiment Analyzer</h1>
+            <p>Get complete breakdown — 7 Emotions + Positive/Negative for any text!</p>
+            <p><i>Models: DistilRoBERTa (Emotions) + DistilBERT (Sentiment)</i></p>
         </div>
     """)
 
     with gr.Row():
         with gr.Column(scale=1):
-            text_input = gr.Textbox(
+            text_input  = gr.Textbox(
                 label       = "Enter Text",
-                placeholder = "Type a sentence, review, or any text here...",
+                placeholder = "Type any sentence, review, comment...",
                 lines       = 5
             )
-            analyze_btn = gr.Button("🔍 Detect Emotion", variant="primary", size="lg")
+            analyze_btn = gr.Button("🔍 Analyze", variant="primary", size="lg")
 
             gr.Examples(
                 examples = [
-                    ["I absolutely love this! It made my day so much better!"],
-                    ["This is the worst experience I have ever had. I am so angry!"],
+                    ["I absolutely love this! Best thing ever!"],
+                    ["This is terrible. I am so angry and disappointed."],
                     ["The movie was okay, nothing special but not terrible either."],
-                    ["I am so scared, I don't know what will happen next."],
-                    ["Oh wow! I never expected that to happen, what a surprise!"],
+                    ["I am so scared about tomorrow's exam."],
+                    ["Oh wow! I never expected that to happen!"],
                     ["This food smells disgusting, I cannot eat it."],
-                    ["I went to the store and bought some groceries today."],
+                    ["I went to the store and bought groceries today."],
                 ],
                 inputs = [text_input],
                 label  = "Try these examples"
             )
 
         with gr.Column(scale=1):
-            sentiment_label = gr.Textbox(
-                label       = "Detected Emotion",
+            top_result     = gr.Textbox(
+                label       = "Primary Emotion Detected",
                 elem_classes= ["result"],
                 interactive = False
             )
-            message_output = gr.Markdown(label="Analysis")
-            score_output   = gr.Label(
-                label           = "All Emotion Scores (%)",
+            summary_output = gr.Markdown()
+            gr.Markdown("### 😊 Emotion Breakdown (7 Emotions)")
+            emotion_scores = gr.Label(
+                label           = "Emotion Scores",
                 num_top_classes = 7
+            )
+            gr.Markdown("### 👍 Sentiment Breakdown (Positive / Negative)")
+            sentiment_scores = gr.Label(
+                label           = "Sentiment Scores",
+                num_top_classes = 2
             )
 
     gr.HTML("""
@@ -110,22 +143,22 @@ with gr.Blocks(
     """)
 
     analyze_btn.click(
-        fn      = analyze_sentiment,
+        fn      = analyze,
         inputs  = [text_input],
-        outputs = [sentiment_label, message_output, score_output]
+        outputs = [top_result, summary_output, emotion_scores, sentiment_scores]
     )
 
     text_input.submit(
-        fn      = analyze_sentiment,
+        fn      = analyze,
         inputs  = [text_input],
-        outputs = [sentiment_label, message_output, score_output]
+        outputs = [top_result, summary_output, emotion_scores, sentiment_scores]
     )
 
 
 # ── 4. Launch ───────────────────────────────────────────────
 if __name__ == "__main__":
     demo.launch(
-        share       = True,
+        share       = False,
         server_name = "0.0.0.0",
         server_port = 7861,
         show_error  = True
