@@ -18,6 +18,9 @@ pinned: false
 
 ---
 
+## 📸 Demo Screenshot
+
+![Demo](DemoPic.png)
 ## 📌 What is this project?
 
 This project builds an **AI-powered Full Emotion & Sentiment Analysis System** that detects:
