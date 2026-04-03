@@ -1,3 +1,16 @@
+---
+title: Sentiment Analysis Bert
+emoji: 🧠
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+sdk_version: "4.44.1"
+huggingface_hub: "0.23.0"
+python_version: "3.10"
+app_file: app.py
+pinned: false
+---
+
 # 🧠 Full Emotion & Sentiment Analyzer using BERT
 
 > **Author:** Aarica Raj
@@ -5,6 +18,13 @@
 > **Tech Stack:** Python · PyTorch · HuggingFace Transformers · DistilRoBERTa · DistilBERT · Gradio
 
 ---
+
+## 🎥 Demo Video
+
+https://github.com/Aaricacoding/sentiment-analysis-bert/raw/main/demo_video.mp4
+
+## 🌐 Live Demo
+Try it live here → https://aaricacoding-sentiment-analysis-bert.hf.space
 
 ## 📌 What is this project?
 
@@ -110,7 +130,7 @@ python app.py
 
 ### Step 5 : Open in Browser
 ```
-http://localhost:7861
+https://aaricacoding-sentiment-analysis-bert.hf.space
 ```
 
 > 💡 First run downloads both models (~550MB total). Only happens once!
@@ -119,7 +139,7 @@ http://localhost:7861
 
 ## 🚀 How to Use
 
-1. Open the app at `http://localhost:7861`
+1. Open the app at `https://aaricacoding-sentiment-analysis-bert.hf.space`
 2. **Type any text** in the input box
 3. Click **"🔍 Analyze"** or press **Enter**
 4. See the full breakdown:
@@ -189,13 +209,13 @@ http://localhost:7861
 
 ## 📄 License
 
-MIT License : free to use, modify, and share!
+MIT License — free to use, modify, and share!
 
 ---
 
 ## 🙏 Acknowledgements
 
-- [HuggingFace](https://huggingface.co) : for Transformers library and model hub
-- [j-hartmann](https://huggingface.co/j-hartmann) : for the emotion detection model
-- [Stanford NLP](https://nlp.stanford.edu/sentiment/) : for SST-2 dataset
-- [Gradio Team](https://gradio.app) : for the UI framework
+- [HuggingFace](https://huggingface.co) — for Transformers library and model hub
+- [j-hartmann](https://huggingface.co/j-hartmann) — for the emotion detection model
+- [Stanford NLP](https://nlp.stanford.edu/sentiment/) — for SST-2 dataset
+- [Gradio Team](https://gradio.app) — for the UI framework
