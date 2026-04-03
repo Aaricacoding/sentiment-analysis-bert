@@ -4,8 +4,7 @@ emoji: 🧠
 colorFrom: blue
 colorTo: purple
 sdk: gradio
-sdk_version: "4.44.1"
-huggingface_hub: "0.23.0"
+sdk_version: "4.0.0"
 python_version: "3.10"
 app_file: app.py
 pinned: false
@@ -19,22 +18,15 @@ pinned: false
 
 ---
 
-## 🎥 Demo Video
-
-https://github.com/Aaricacoding/sentiment-analysis-bert/raw/main/demo_video.mp4
-
-## 🌐 Live Demo
-Try it live here → https://aaricacoding-sentiment-analysis-bert.hf.space
-
 ## 📌 What is this project?
 
 This project builds an **AI-powered Full Emotion & Sentiment Analysis System** that detects:
-- **7 Emotions** : Joy, Sadness, Anger, Fear, Surprise, Disgust, Neutral
-- **Overall Sentiment** : Positive or Negative
+- **7 Emotions** — Joy, Sadness, Anger, Fear, Surprise, Disgust, Neutral
+- **Overall Sentiment** — Positive or Negative
 
 It uses **two models together:**
-- **DistilRoBERTa** : fine-tuned on emotion dataset for 7-emotion detection
-- **DistilBERT** : fine-tuned on SST-2 for Positive/Negative sentiment
+- **DistilRoBERTa** — fine-tuned on emotion dataset for 7-emotion detection
+- **DistilBERT** — fine-tuned on SST-2 for Positive/Negative sentiment
 
 Real-world use cases:
 - 📦 Product review analysis
@@ -79,10 +71,10 @@ Input Text
 |---|---|
 | **BERT** | Reads text in both directions for better understanding |
 | **DistilBERT** | 40% smaller, 60% faster than BERT, keeps 97% accuracy |
-| **RoBERTa** | Improved BERT with better training - more accurate |
+| **RoBERTa** | Improved BERT with better training — more accurate |
 | **DistilRoBERTa** | Lighter version of RoBERTa for faster inference |
 | **Fine-tuning** | Pre-trained model trained further on specific data |
-| **SST-2** | Stanford Sentiment Treebank - 67K labeled movie reviews |
+| **SST-2** | Stanford Sentiment Treebank — 67K labeled movie reviews |
 | **Softmax** | Converts raw scores to probabilities that sum to 100% |
 
 ---
@@ -101,13 +93,13 @@ sentiment-analysis-bert/
 
 ## ⚙️ Setup & Installation
 
-### Step 1 : Clone the Repository
+### Step 1 — Clone the Repository
 ```bash
 git clone https://github.com/Aaricacoding/sentiment-analysis-bert.git
 cd sentiment-analysis-bert
 ```
 
-### Step 2 : Create Virtual Environment
+### Step 2 — Create Virtual Environment
 ```bash
 python -m venv venv
 
@@ -118,17 +110,17 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### Step 3 : Install Dependencies
+### Step 3 — Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 4 : Run the App
+### Step 4 — Run the App
 ```bash
 python app.py
 ```
 
-### Step 5 : Open in Browser
+### Step 5 — Open in Browser
 ```
 https://aaricacoding-sentiment-analysis-bert.hf.space
 ```
